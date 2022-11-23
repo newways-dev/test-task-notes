@@ -5,6 +5,10 @@ import styles from './Sidebar.module.css'
 
 const data = [
   {
+    id: 0,
+    title: 'Новая заметка',
+  },
+  {
     id: 1,
     title: 'Ant Design Title 1',
   },
@@ -23,7 +27,7 @@ const data = [
 ]
 
 export const Sidebar = () => {
-  const [active, setActive] = useState<number>(1)
+  const [active, setActive] = useState<number>(0)
 
   return (
     <div className={styles.sidebar}>
