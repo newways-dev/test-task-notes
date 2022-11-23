@@ -1,5 +1,7 @@
 import { List } from 'antd'
 import { useState } from 'react'
+import clsx from 'clsx'
+import styles from './Sidebar.module.css'
 
 const data = [
   {
@@ -23,20 +25,25 @@ const data = [
 export const Sidebar = () => {
   const [active, setActive] = useState<number>(1)
 
-  console.log(active)
-
   return (
-    <List
-      itemLayout='horizontal'
-      dataSource={data}
-      renderItem={(item) => (
-        <List.Item onClick={() => setActive(item.id)}>
-          <List.Item.Meta
-            title={<a href='https://ant.design'>{item.title}</a>}
-            description='12: 34 Ant Design desc'
-          />
-        </List.Item>
-      )}
-    />
+    <div className={styles.sidebar}>
+      <List
+        itemLayout='horizontal'
+        dataSource={data}
+        renderItem={(item) => (
+          <List.Item
+            className={clsx(styles.item, {
+              [styles.active]: active === item.id,
+            })}
+            onClick={() => setActive(item.id)}
+          >
+            <List.Item.Meta
+              title={item.title}
+              description='12: 34 Ant Design desc'
+            />
+          </List.Item>
+        )}
+      />
+    </div>
   )
 }

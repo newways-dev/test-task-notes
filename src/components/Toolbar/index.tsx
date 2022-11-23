@@ -19,7 +19,7 @@ export const Toolbar: FC = () => {
       <Search
         placeholder='input search text'
         onSearch={onSearch}
-        style={{ width: 200 }}
+        style={{ width: 250 }}
       />
     </div>
   )
