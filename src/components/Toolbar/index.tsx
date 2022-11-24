@@ -41,6 +41,7 @@ export const Toolbar: FC = () => {
   const deleteNote = async (id: string) => {
     try {
       await deleteDoc(doc(database, 'notes', id))
+      context?.setActiveNote(null)
     } catch (error) {
       console.log(error)
     }
@@ -76,7 +77,7 @@ export const Toolbar: FC = () => {
         />
       </div>
       <Search
-        placeholder='input search text'
+        placeholder='Find note'
         onSearch={onSearch}
         style={{ width: 250 }}
       />

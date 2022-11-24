@@ -4,8 +4,8 @@ import { NoteType } from '../types/note'
 interface IAppContext {
   edit: boolean
   setEdit: Dispatch<SetStateAction<boolean>>
-  activeNote: NoteType
-  setActiveNote: Dispatch<SetStateAction<NoteType>>
+  activeNote: NoteType | null
+  setActiveNote: Dispatch<SetStateAction<NoteType | null>>
 }
 
 export const AppContext = createContext<IAppContext | null>(null)

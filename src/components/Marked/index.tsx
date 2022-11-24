@@ -1,11 +1,24 @@
 import { marked } from 'marked'
+import { useEffect, useState } from 'react'
 
 interface MarkedProps {
   markup: string
 }
 
 export const Marked = ({ markup }: MarkedProps) => {
-  const content = marked.parse(markup)
+  const [content, setContent] = useState<string>('')
 
-  return <div dangerouslySetInnerHTML={{ __html: content }} />
+  useEffect(() => {
+    if (markup) {
+      const parsed = marked.parse(markup)
+      setContent(parsed)
+    }
+  }, [markup])
+
+  return (
+    <div
+      style={{ paddingLeft: '30px' }}
+      dangerouslySetInnerHTML={{ __html: content }}
+    />
+  )
 }

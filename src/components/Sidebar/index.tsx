@@ -1,28 +1,33 @@
+import { useContext, useEffect, useState } from 'react'
 import { List } from 'antd'
-import { useContext } from 'react'
 import clsx from 'clsx'
-import styles from './Sidebar.module.css'
 import { NoteType } from '../../types/note'
 import { AppContext } from '../../context/context'
+import styles from './Sidebar.module.css'
 
 interface SidebarProps {
   notes: NoteType[]
 }
 
 export const Sidebar = ({ notes }: SidebarProps) => {
-  let data = notes.map((note) => ({ ...note }))
+  // const [updatedNotes, setUpdatedNotes] = useState<NoteType[]>(notes)
+
   const context = useContext(AppContext)
   const activeNote = context?.activeNote
-
   const handleClick = (note: NoteType) => {
     context?.setActiveNote(note)
   }
+
+  // useEffect(() => {
+  //   let data = notes.map((note) => ({ ...note }))
+  //   setUpdatedNotes(data)
+  // }, [notes])
 
   return (
     <div className={styles.sidebar}>
       <List
         itemLayout='horizontal'
-        dataSource={data}
+        dataSource={notes}
         renderItem={(item) => (
           <List.Item
             className={clsx(styles.item, {

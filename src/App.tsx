@@ -1,6 +1,6 @@
 import { Layout } from 'antd'
 import { useEffect, useState } from 'react'
-import { collection, onSnapshot } from 'firebase/firestore'
+import { collection, doc, getDoc, onSnapshot } from 'firebase/firestore'
 import { Sidebar, Toolbar, Workspace } from './components'
 import { NoteType } from './types/note'
 import { database } from './firebase'
@@ -10,13 +10,8 @@ const { Header, Sider, Content } = Layout
 function App() {
   const [notes, setNotes] = useState<NoteType[]>([])
   const [edit, setEdit] = useState<boolean>(false)
-  const [activeNote, setActiveNote] = useState<NoteType>(notes[0])
-
-  useEffect(() => {
-    if (notes.length > 0) {
-      setActiveNote(notes[0])
-    }
-  }, [notes])
+  const [activeNote, setActiveNote] = useState<NoteType | null>(notes[0])
+  const [currentNote, setCurrentNote] = useState<NoteType | null>(null)
 
   useEffect(() => {
     const notesRef = collection(database, 'notes')
@@ -28,6 +23,21 @@ function App() {
 
     return unsubscribe
   }, [])
+
+  useEffect(() => {
+    if (activeNote?.id) {
+      try {
+        const fetchNote = async () => {
+          const docRef = doc(database, 'notes', activeNote.id)
+          const snapshot = await getDoc(docRef)
+          setCurrentNote({ ...(snapshot.data() as NoteType) })
+        }
+        fetchNote()
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }, [activeNote, notes])
 
   return (
     <div className='app'>
@@ -41,7 +51,7 @@ function App() {
               <Sidebar notes={notes} />
             </Sider>
             <Content style={{ background: '#fff' }}>
-              <Workspace />
+              {currentNote && <Workspace markup={currentNote.markup} />}
             </Content>
           </Layout>
         </Layout>
