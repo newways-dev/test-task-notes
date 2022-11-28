@@ -9,20 +9,35 @@ const { Header, Sider, Content } = Layout
 
 function App() {
   const [notes, setNotes] = useState<NoteType[]>([])
+  const [filteredNotes, setFilteredNotes] = useState<NoteType[]>([])
   const [edit, setEdit] = useState<boolean>(false)
   const [activeNote, setActiveNote] = useState<NoteType | null>(notes[0])
   const [currentNote, setCurrentNote] = useState<NoteType | null>(null)
+  const [searchValue, setSearchValue] = useState<string>('')
+  const data = searchValue ? filteredNotes : notes
 
   useEffect(() => {
-    const notesRef = collection(database, 'notes')
-    const unsubscribe = onSnapshot(notesRef, (snapshot) => {
-      setNotes(
-        snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as NoteType))
-      )
-    })
+    if (searchValue === '') {
+      const notesRef = collection(database, 'notes')
+      const unsubscribe = onSnapshot(notesRef, (snapshot) => {
+        setNotes(
+          snapshot.docs.map(
+            (doc) => ({ id: doc.id, ...doc.data() } as NoteType)
+          )
+        )
+      })
+      return unsubscribe
+    }
+  }, [searchValue])
 
-    return unsubscribe
-  }, [])
+  useEffect(() => {
+    if (searchValue) {
+      const filtered = notes.filter((note) =>
+        note.title.toLowerCase().includes(searchValue.toLowerCase())
+      )
+      setFilteredNotes(filtered)
+    }
+  }, [searchValue, notes])
 
   useEffect(() => {
     if (activeNote?.id) {
@@ -41,17 +56,31 @@ function App() {
 
   return (
     <div className='app'>
-      <AppContext.Provider value={{ edit, setEdit, activeNote, setActiveNote }}>
+      <AppContext.Provider
+        value={{
+          edit,
+          setEdit,
+          activeNote,
+          setActiveNote,
+          searchValue,
+          setSearchValue,
+        }}
+      >
         <Layout style={{ background: '#fff', height: '100%' }}>
           <Header style={{ background: '#fff', paddingInline: '0' }}>
             <Toolbar />
           </Header>
           <Layout>
             <Sider style={{ background: '#fff', height: '100%' }}>
-              <Sidebar notes={notes} />
+              <Sidebar notes={data} />
             </Sider>
             <Content style={{ background: '#fff' }}>
-              {currentNote && <Workspace markup={currentNote.markup} />}
+              {currentNote && (
+                <Workspace
+                  title={currentNote.title}
+                  markup={currentNote.markup}
+                />
+              )}
             </Content>
           </Layout>
         </Layout>

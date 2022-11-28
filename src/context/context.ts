@@ -6,6 +6,8 @@ interface IAppContext {
   setEdit: Dispatch<SetStateAction<boolean>>
   activeNote: NoteType | null
   setActiveNote: Dispatch<SetStateAction<NoteType | null>>
+  searchValue: string
+  setSearchValue: Dispatch<SetStateAction<string>>
 }
 
 export const AppContext = createContext<IAppContext | null>(null)

@@ -15,14 +15,20 @@ export const Toolbar: FC = () => {
   const { Search } = Input
   const [open, setOpen] = useState(false)
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false)
+  const [updatedSearch, setUpdatedSearch] = useState<string>('')
   const context = useContext(AppContext)
   const activeNote = context?.activeNote
   const edit = context?.edit
 
-  const onSearch = (value: string) => console.log(value)
+  const onSearch = (value: string) => {
+    setUpdatedSearch(value)
+    context?.setSearchValue(updatedSearch)
+  }
 
   const showModal = () => {
-    setOpen(true)
+    if (activeNote !== null) {
+      setOpen(true)
+    }
   }
 
   const handleOk = () => {

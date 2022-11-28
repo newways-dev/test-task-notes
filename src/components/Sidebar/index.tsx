@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext } from 'react'
 import { List } from 'antd'
 import clsx from 'clsx'
 import { NoteType } from '../../types/note'
@@ -10,18 +10,12 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ notes }: SidebarProps) => {
-  // const [updatedNotes, setUpdatedNotes] = useState<NoteType[]>(notes)
-
   const context = useContext(AppContext)
   const activeNote = context?.activeNote
+
   const handleClick = (note: NoteType) => {
     context?.setActiveNote(note)
   }
-
-  // useEffect(() => {
-  //   let data = notes.map((note) => ({ ...note }))
-  //   setUpdatedNotes(data)
-  // }, [notes])
 
   return (
     <div className={styles.sidebar}>
